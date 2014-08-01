@@ -18,6 +18,9 @@ type Transformer interface {
 //
 // transformers is a map of field names to Transformer.
 // Before the transformers are run, Transform honors the json struct tag of the field.
+//
+// Note that Transform stays at depth 1: only the fields of the struct are processed, not nested data structures.
+// e.g: T.Foo is processed, but T.Foo.Bar isn't.
 func Transform(v interface{}, transformers map[string]Transformer) map[string]interface{} {
 	rv := reflect.ValueOf(v)
 KindTest:
