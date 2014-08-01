@@ -36,8 +36,34 @@ func ExampleTransform() {
 	})
 	_, err := json.Marshal(m)
 	if err != nil {
-		log.Println(err)
+		log.Fatal(err)
 	}
 	fmt.Printf("%s", m["friends_url"])
 	// Output: https://some.api.com/users/4fa654a/friends
+}
+
+func ExampleTransform_nil() {
+	// nil is a valid value for the transformers argument
+	// for retrieving a map[string]interface{} out of a struct.
+	type User struct {
+		Id      string `json:"id"`
+		Name    string `json:"name"`
+		Age     int    `json:"age"`
+		Friends []User `json:"friends"`
+	}
+	user := User{
+		Id:   "4fa654a",
+		Name: "Lelouch",
+		Age:  22,
+		Friends: []User{
+			{Id: "65de67a", Name: "Ringo", Age: 25},
+			{Id: "942ab70", Name: "Vivi", Age: 28},
+		},
+	}
+
+	m := structfield.Transform(user, nil)
+	_, err := json.Marshal(m)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
